@@ -11,7 +11,8 @@ import {
   Select, 
   SimpleGrid, 
   Paper, 
-  Divider 
+  Divider,
+  Loader
 } from '@mantine/core';
 import axios from 'axios';
 import brandModels from './brand_models';
@@ -35,6 +36,7 @@ export default function CarPricePredictor() {
   
   // State to store predicted prices after API response
   const [predictedPrices, setPredictedPrices] = useState<string[] | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const locations = ["Ahmedabad", "Bangalore", "Chennai", "Coimbatore", "Delhi", "Hyderabad", "Jaipur", "Kochi", "Kolkata", "Mumbai", "Pune"];
   const fuelTypes = ["Petrol", "Diesel", "Other"];
@@ -108,6 +110,8 @@ export default function CarPricePredictor() {
       return;
     }
 
+    setLoading(true);
+
     try {
       const response = await axios.post(cloudRunUrl, {
         "input": cars
@@ -123,6 +127,8 @@ export default function CarPricePredictor() {
     } catch (error) {
       console.error("Prediction error", error);
       setPredictedPrices(["Error in prediction."]);
+    } finally {
+      setLoading(false); // after request completes
     }
   };
 
@@ -235,8 +241,8 @@ export default function CarPricePredictor() {
           </Group>
 
           <Group mt="xl">
-            <Button type="submit" size="lg" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }}>
-              Predict Prices
+            <Button type="submit" size="lg" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }} disabled={loading}>
+              {loading ? <Loader size="sm" color="white" /> : 'Predict Prices'}
             </Button>
           </Group>
         </form>
