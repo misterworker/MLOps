@@ -101,8 +101,15 @@ export default function CarPricePredictor() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const cloudRunUrl = process.env.NEXT_PUBLIC_CLOUD_RUN_URL;
+
+    if (!cloudRunUrl) {
+      console.error('Cloud Run URL is not defined!');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/predict', {
+      const response = await axios.post(cloudRunUrl, {
         "input": cars
       });
 
