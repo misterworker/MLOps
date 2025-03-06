@@ -102,7 +102,7 @@ export default function CarPricePredictor() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://car-price-predictor-m9l0-1531a252.mt-guc1.bentoml.ai/predict', {
+      const response = await axios.post('http://127.0.0.1:8000/predict', {
         "input": cars
       });
 
